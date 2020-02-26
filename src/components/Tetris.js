@@ -1,5 +1,8 @@
 import React from "react";
 
+import { createStage } from '../gameUtils/gameHelpers'
+
+// Components
 import Stage from './Stage'
 import Display from './Display'
 import StartButt from './StartButton'
@@ -7,7 +10,7 @@ import StartButt from './StartButton'
 export default () => {
   return (
     <div>
-      <Stage />
+      <Stage stage={createStage()}/>
       <aside>
         <div>
           <Display text="Score" />
