@@ -1,3 +1,5 @@
 import React from "react";
 
-export default ({ gameOver, text }) => <div>{text}</div>;
+import { StyledDisplay } from './styles/StyledDisplay'
+
+export default ({ gameOver, text }) => <StyledDisplay gameOver={gameOver}>{text}</StyledDisplay>;
