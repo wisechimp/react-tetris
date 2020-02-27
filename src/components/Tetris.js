@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { createStage } from '../gameUtils/gameHelpers'
+import { createStage, checkCollision } from '../gameUtils/gameHelpers'
 
 // Custom Hooks
 import { usePlayer } from '../hooks/usePlayer'
@@ -21,18 +21,30 @@ export default () => {
 
   console.log('Re-render')
 
-  const movePlayer = direction => {
-    updatePlayerPosition({ x: direction, y: 0 })
+  const movePlayerHorizontally = direction => {
+    if (!checkCollision(player, stage, { x: direction, y: 0 })) {
+      updatePlayerPosition({ x: direction, y: 0 })
+    }
   }
 
   const startGame = () => {
     //Reset everything
     setStage(createStage())
     resetPlayer()
+    setGameOver(false)
   }
 
   const drop = () => {
-    updatePlayerPosition({ x: 0, y: 1, collided: false })
+    if (!checkCollision(player, stage, { x: 0, y: 1 })){
+      updatePlayerPosition({ x: 0, y: 1, collided: false })
+    } else {
+      if (player.position.y < 1) {
+        console.log('Game Over !!!')
+        setGameOver(true)
+        setDropTime(null)
+      }
+      updatePlayerPosition({ x: 0, y: 0, collided: true })
+    }
   }
 
   const dropPlayer = () => {
@@ -43,10 +55,10 @@ export default () => {
     if (!gameOver) {
       switch (keyCode) {
         case 37:
-          movePlayer(-1)
+          movePlayerHorizontally(-1)
           break
         case 39:
-          movePlayer(1)
+          movePlayerHorizontally(1)
           break
         case 40:
           dropPlayer()
