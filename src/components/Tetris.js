@@ -16,13 +16,49 @@ export default () => {
   const [dropTime, setDropTime] = useState()
   const [gameOver, setGameOver] = useState(false)
 
-  const [player] = usePlayer()
-  const [stage, setStage] = useStage(player)
+  const [player, updatePlayerPosition, resetPlayer] = usePlayer();
+  const [stage, setStage] = useStage(player, resetPlayer)
 
   console.log('Re-render')
 
+  const movePlayer = direction => {
+    updatePlayerPosition({ x: direction, y: 0 })
+  }
+
+  const startGame = () => {
+    //Reset everything
+    setStage(createStage())
+    resetPlayer()
+  }
+
+  const drop = () => {
+    updatePlayerPosition({ x: 0, y: 1, collided: false })
+  }
+
+  const dropPlayer = () => {
+    drop()
+  }
+
+  const move = ({ keyCode }) => {
+    if (!gameOver) {
+      switch (keyCode) {
+        case 37:
+          movePlayer(-1)
+          break
+        case 39:
+          movePlayer(1)
+          break
+        case 40:
+          dropPlayer()
+          break
+        default:
+          break
+      }
+    }
+  }
+
   return (
-    <StyledTetrisWrapper>
+    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={e => move(e)}>
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
@@ -35,7 +71,7 @@ export default () => {
             <Display text="Level" />
           </div>
           )}
-          <StartButt />
+          <StartButt callback={startGame} />
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>
