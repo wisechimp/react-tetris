@@ -16,7 +16,7 @@ export default () => {
   const [dropTime, setDropTime] = useState()
   const [gameOver, setGameOver] = useState(false)
 
-  const [player, updatePlayerPosition, resetPlayer] = usePlayer();
+  const [player, updatePlayerPosition, resetPlayer, rotatePlayer] = usePlayer();
   const [stage, setStage] = useStage(player, resetPlayer)
 
   console.log('Re-render')
@@ -56,6 +56,9 @@ export default () => {
       switch (keyCode) {
         case 37:
           movePlayerHorizontally(-1)
+          break
+        case 38:
+          rotatePlayer(stage, 1)
           break
         case 39:
           movePlayerHorizontally(1)
