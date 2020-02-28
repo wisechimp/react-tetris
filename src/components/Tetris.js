@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { createStage, checkCollision } from '../gameUtils/gameHelpers'
 
 // Custom Hooks
+import { useInterval } from '../hooks/useInterval' // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 import { usePlayer } from '../hooks/usePlayer'
 import { useStage } from '../hooks/useStage'
 
@@ -13,7 +14,7 @@ import Display from './Display'
 import StartButt from './StartButton'
 
 export default () => {
-  const [dropTime, setDropTime] = useState()
+  const [dropTime, setDropTime] = useState(null)
   const [gameOver, setGameOver] = useState(false)
 
   const [player, updatePlayerPosition, resetPlayer, rotatePlayer] = usePlayer();
@@ -30,6 +31,7 @@ export default () => {
   const startGame = () => {
     //Reset everything
     setStage(createStage())
+    setDropTime(1000)
     resetPlayer()
     setGameOver(false)
   }
@@ -47,7 +49,17 @@ export default () => {
     }
   }
 
+  const keyUp = ({ keyCode }) => {
+    if (!gameOver) {
+      if (keyCode === 40) {
+        console.log('Interval on')
+        setDropTime(1000)
+      }
+    }
+  }
   const dropPlayer = () => {
+    console.log('Interval off')
+    setDropTime(null)
     drop()
   }
 
@@ -72,8 +84,12 @@ export default () => {
     }
   }
 
+  useInterval(() => {
+    drop()
+  }, dropTime)
+
   return (
-    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={e => move(e)}>
+    <StyledTetrisWrapper role="button" tabIndex="0" onKeyDown={e => move(e)} onKeyUp={keyUp}>
       <StyledTetris>
         <Stage stage={stage} />
         <aside>
