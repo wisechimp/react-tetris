@@ -123,6 +123,7 @@ export default () => {
             </div>
           )}
           <StartButt callback={startGame} />
+          <Display text="Use the arrow keys to control the 'Tetromino'. Left and Right should be self explanatory! Down increases the speed and Up to rotate it."/>
         </aside>
       </StyledTetris>
     </StyledTetrisWrapper>
